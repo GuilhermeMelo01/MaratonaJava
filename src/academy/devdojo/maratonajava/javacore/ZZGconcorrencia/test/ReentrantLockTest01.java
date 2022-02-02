@@ -1,5 +1,7 @@
 package academy.devdojo.maratonajava.javacore.ZZGconcorrencia.test;
 
+import org.w3c.dom.ls.LSOutput;
+
 import java.util.concurrent.TimeUnit;
 import java.util.concurrent.locks.Lock;
 import java.util.concurrent.locks.ReentrantLock;
