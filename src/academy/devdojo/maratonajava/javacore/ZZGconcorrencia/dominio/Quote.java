@@ -1,7 +1,5 @@
 package academy.devdojo.maratonajava.javacore.ZZGconcorrencia.dominio;
 
-import java.awt.print.PrinterException;
-
 // storeName:price:discountCode
 public final class Quote {
     private final String store;
@@ -20,8 +18,8 @@ public final class Quote {
      * @return new Quote with values from @param value
      */
     public static Quote newQuote(String value){
-        String[] values = value.split(":");
-        return new Quote(values[0], Double.parseDouble(values[1]), Discount.Code.valueOf(values[2]));
+        String [] values = value.split(":");
+        return new Quote(values[0], Double.parseDouble(values[1].replaceAll(",", ".")), Discount.Code.valueOf(values[2]));
     }
 
     @Override
