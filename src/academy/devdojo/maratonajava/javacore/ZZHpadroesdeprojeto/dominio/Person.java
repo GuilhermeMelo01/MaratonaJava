@@ -57,8 +57,13 @@ public class Person {
             return this;
         }
 
+        public String getFirstName() {
+            return firstName;
+        }
+
         public Person build() {
             return new Person(firstName, lastName, username, email);
         }
+
     }
 }
