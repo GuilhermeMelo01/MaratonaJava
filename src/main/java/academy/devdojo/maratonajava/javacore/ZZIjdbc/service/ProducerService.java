@@ -37,6 +37,14 @@ public class ProducerService {
         ProducerRepository.showDriverMetaData();
     }
 
+    public static void showTypeScrollWorking() {
+        ProducerRepository.showTypeScrollWorking();
+    }
+
+    public static List<Producer> findByNameAndToUpperCase(String name) {
+        return ProducerRepository.findByNameAndToUpperCase(name);
+    }
+
     private static void requireValidId(Integer id){
         if (id == null || id <= 0) {
             throw new IllegalArgumentException("Invalid value for id");

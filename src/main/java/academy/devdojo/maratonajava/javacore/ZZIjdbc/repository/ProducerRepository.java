@@ -54,9 +54,9 @@ public class ProducerRepository {
         String sql = "select * from producer where name like '%%%s%%';"
                 .formatted(name);
         List<Producer> producers = new ArrayList<>();
-        try (Connection conn = ConnectionFactory.getConnection()) {
+        try (Connection conn = ConnectionFactory.getConnection();
             Statement stmt = conn.createStatement();
-            ResultSet rs = stmt.executeQuery(sql);
+            ResultSet rs = stmt.executeQuery(sql)){
             while (rs.next()) {
                 Producer producer = Producer
                         .builder()
@@ -95,28 +95,92 @@ public class ProducerRepository {
         log.info("Showing Driver Metadata");
         try (Connection conn = ConnectionFactory.getConnection()) {
             DatabaseMetaData dbMetaData = conn.getMetaData();
-            if (dbMetaData.supportsResultSetType(ResultSet.TYPE_FORWARD_ONLY)){
+            if (dbMetaData.supportsResultSetType(ResultSet.TYPE_FORWARD_ONLY)) {
                 log.info("Support TYPE_FORWARD_ONLY");
-                if (dbMetaData.supportsResultSetConcurrency(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE)){
+                if (dbMetaData.supportsResultSetConcurrency(ResultSet.TYPE_FORWARD_ONLY, ResultSet.CONCUR_UPDATABLE)) {
                     log.info("And Support CONCUR_UPDATABLE");
                 }
             }
 
-            if (dbMetaData.supportsResultSetType(ResultSet.TYPE_SCROLL_INSENSITIVE)){
+            if (dbMetaData.supportsResultSetType(ResultSet.TYPE_SCROLL_INSENSITIVE)) {
                 log.info("Support TYPE_SCROLL_INSENSITIVE");
-                if (dbMetaData.supportsResultSetConcurrency(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)){
+                if (dbMetaData.supportsResultSetConcurrency(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
                     log.info("And Support CONCUR_UPDATABLE");
                 }
             }
 
-            if (dbMetaData.supportsResultSetType(ResultSet.TYPE_SCROLL_SENSITIVE)){
+            if (dbMetaData.supportsResultSetType(ResultSet.TYPE_SCROLL_SENSITIVE)) {
                 log.info("Support TYPE_SCROLL_SENSITIVE");
-                if (dbMetaData.supportsResultSetConcurrency(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)){
+                if (dbMetaData.supportsResultSetConcurrency(ResultSet.TYPE_SCROLL_SENSITIVE, ResultSet.CONCUR_UPDATABLE)) {
                     log.info("And Support CONCUR_UPDATABLE");
                 }
             }
         } catch (SQLException e) {
             log.error("Error while trying to find all producer ", e);
         }
+    }
+
+    public static void showTypeScrollWorking() {
+        String sql = "select * from producer;";
+        try (Connection conn = ConnectionFactory.getConnection();
+             Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+             ResultSet rs = stmt.executeQuery(sql)) {
+            log.info("last row? '{}'", rs.last());
+            log.info("Row number? '{}'", rs.getRow());
+            log.info(Producer.builder().id(rs.getInt("id")).name(rs.getString("name")).build());
+
+            log.info("first row? '{}'", rs.first());
+            log.info("Row number? '{}'", rs.getRow());
+            log.info(Producer.builder().id(rs.getInt("id")).name(rs.getString("name")).build());
+
+            log.info("Row absolute? '{}'", rs.absolute(2));
+            log.info("Row number? '{}'", rs.getRow());
+            log.info(Producer.builder().id(rs.getInt("id")).name(rs.getString("name")).build());
+
+            log.info("Row relative? '{}'", rs.relative(-1));
+            log.info("Row number? '{}'", rs.getRow());
+            log.info(Producer.builder().id(rs.getInt("id")).name(rs.getString("name")).build());
+
+            log.info("Row is Last? '{}'", rs.isLast());
+            log.info("Row number? '{}'", rs.getRow());
+
+            log.info("Row is first? '{}'", rs.isFirst());
+            log.info("Row number? '{}'", rs.getRow());
+
+            log.info("last row? '{}'", rs.last());
+            log.info("---------------------");
+            rs.next();
+            log.info("After Last row? '{}'", rs.isAfterLast());
+            while(rs.previous()){
+                log.info(Producer.builder().id(rs.getInt("id")).name(rs.getString("name")).build());
+            }
+
+        } catch (SQLException e) {
+            log.error("Error while trying to find all producer ", e);
+        }
+    }
+
+    public static List<Producer> findByNameAndToUpperCase(String name) {
+        log.info("find producers by name");
+        String sql = "select * from producer where name like '%%%s%%';"
+                .formatted(name);
+        List<Producer> producers = new ArrayList<>();
+        try (Connection conn = ConnectionFactory.getConnection();
+            Statement stmt = conn.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_UPDATABLE);
+            ResultSet rs = stmt.executeQuery(sql)){
+            while (rs.next()) {
+                rs.updateString("name", rs.getString("name").toUpperCase());
+                rs.updateRow();
+                Producer producer = Producer
+                        .builder()
+                        .id(rs.getInt("id"))
+                        .name(rs.getString("name"))
+                        .build();
+                producers.add(producer);
+            }
+        } catch (SQLException e) {
+            log.error("Error while trying to find all producer ", e);
+        }
+        return producers;
     }
 }
