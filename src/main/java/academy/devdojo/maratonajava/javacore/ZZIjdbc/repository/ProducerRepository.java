@@ -22,6 +22,35 @@ public class ProducerRepository {
             log.error("Error while trying to insert producer '{}'", producer.getName(), e);
         }
     }
+    public static void saveTransaction(List<Producer> producers) {
+        try (Connection conn = ConnectionFactory.getConnection()){
+            conn.setAutoCommit(false);
+            preparedStatementSaveTransaction(conn, producers);
+            conn.commit();
+            conn.setAutoCommit(true);
+        } catch (SQLException e) {
+            log.error("Error while trying to update producer '{}'", producers, e);
+        }
+    }
+
+    private static void preparedStatementSaveTransaction(Connection conn, List<Producer> producers ) throws SQLException {
+        String sql = "INSERT INTO producer (name) values (?)";
+        boolean shouldRollBack = false;
+        for (Producer p: producers){
+            try(   PreparedStatement ps = conn.prepareStatement(sql)){
+                log.info("Saving producer '{}'", p.getName());
+                ps.setString(1, p.getName());
+                ps.execute();
+            }catch (SQLException e){
+                e.printStackTrace();
+                shouldRollBack = true;
+            }
+        }
+        if (shouldRollBack) {
+            log.warn("Transaction is going be rollback");
+            conn.rollback();
+        }
+    }
 
     public static void delete(int id) {
         String sql = "DELETE FROM producer WHERE (id = '%d')".formatted(id);
