@@ -8,6 +8,7 @@ import java.sql.DriverManager;
 import java.sql.SQLException;
 
 public class ConnectionFactory {
+    //java.sql = Connection, ResultSet, Statement, DriverManager
 
     public static Connection getConnection() throws SQLException {
         String url = "jdbc:mysql://localhost:3306/anime_store";
