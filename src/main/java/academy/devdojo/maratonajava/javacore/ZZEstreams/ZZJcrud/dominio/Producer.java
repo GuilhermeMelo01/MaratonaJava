@@ -1,4 +1,4 @@
-package academy.devdojo.maratonajava.javacore.ZZIjdbc.dominio;
+package academy.devdojo.maratonajava.javacore.ZZEstreams.ZZJcrud.dominio;
 
 import lombok.Builder;
 import lombok.Value;
@@ -8,7 +8,6 @@ import lombok.Value;
 public class Producer {
     Integer id;
     String name;
-
 
 
 }

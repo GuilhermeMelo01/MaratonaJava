@@ -1,6 +1,6 @@
-package academy.devdojo.maratonajava.javacore.ZZJcrud.test;
+package academy.devdojo.maratonajava.javacore.ZZEstreams.ZZJcrud.test;
 
-import academy.devdojo.maratonajava.javacore.ZZJcrud.service.ProducerService;
+import academy.devdojo.maratonajava.javacore.ZZEstreams.ZZJcrud.service.ProducerService;
 
 import java.util.Scanner;
 
@@ -21,8 +21,7 @@ public class CrudTest01 {
     private static void producerMenu(){
         System.out.println("Type the number of your operation");
         System.out.println("1. Search for producers");
-        System.out.println("2. delete producer");
-        System.out.println("3. Save producer");
+        System.out.println("2. delete the producer");
         System.out.println("0. Exit");
     }
 }
