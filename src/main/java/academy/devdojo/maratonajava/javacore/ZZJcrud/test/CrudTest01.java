@@ -1,5 +1,7 @@
 package academy.devdojo.maratonajava.javacore.ZZJcrud.test;
 
+import academy.devdojo.maratonajava.javacore.ZZJcrud.repository.AnimeRepository;
+import academy.devdojo.maratonajava.javacore.ZZJcrud.service.AnimeService;
 import academy.devdojo.maratonajava.javacore.ZZJcrud.service.ProducerService;
 
 import java.util.Scanner;
@@ -10,20 +12,51 @@ public class CrudTest01 {
     public static void main(String[] args) {
         int op;
 
-        while(true){
-            producerMenu();
+        while (true) {
+            menu();
             op = Integer.parseInt(SCANNER.nextLine());
             if (op == 0) break;
-            ProducerService.menu(op);
+            switch (op){
+                case 1 -> {
+                    animeMenu();
+                    op = Integer.parseInt(SCANNER.nextLine());
+                    AnimeService.menu(op);
+                }
+                case 2 -> {
+                    producerMenu();
+                    op = Integer.parseInt(SCANNER.nextLine());
+                    ProducerService.menu(op);
+                }
+            }
+
         }
+
     }
 
-    private static void producerMenu(){
+    private static void menu() {
+        System.out.println("Type the number of your operation");
+        System.out.println("1. Anime");
+        System.out.println("2. Producer");
+        System.out.println("0. Exit");
+
+    }
+
+
+    private static void producerMenu() {
         System.out.println("Type the number of your operation");
         System.out.println("1. Search for producers");
         System.out.println("2. Delete producer");
         System.out.println("3. Save producer");
         System.out.println("4. Update producer");
-        System.out.println("0. Exit");
+        System.out.println("9. Go Back");
+    }
+
+    private static void animeMenu() {
+        System.out.println("Type the number of your operation");
+        System.out.println("1. Search for animes");
+        System.out.println("2. Delete anime");
+        System.out.println("3. Save anime");
+        System.out.println("4. Update anime");
+        System.out.println("9. Go Back");
     }
 }
